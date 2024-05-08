@@ -10,9 +10,27 @@ Jose Sayago, Dorieliz Guerrero, Alyeluz Perez
 
 ## Intalacion
 
+Crear entorno virtual:
+
+~~~shell
+py -m venv .env 
+~~~
+
+Activar entorno virtual Linux:
+
+~~~shell
+source venv/bin/activate 
+~~~
+
+Activar entorno virtual Windows:
+
+~~~shell
+venv\Scripts\activate
+~~~
+
 Ejecutar con pip:
 
-~~~python
+~~~shell
 pip install flask flask_bcrypt email_validator flask-wtf sqlalchemy flask_login mysql-connector-python
 ~~~
 
@@ -32,6 +50,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://usuario:password
 
 Ejecutar en la linea de comandos:
 
-~~~python
+~~~shell
 flask --app index run
 ~~~
