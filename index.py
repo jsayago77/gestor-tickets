@@ -15,6 +15,7 @@ def validate_cedula(self, cedula):
             raise ValidationError(
                 'La cedula ya existe. Por favor inicie sesión.')
 
+# CLASES DE LOS FORMULARIOS ---INICIO---
 class LoginForm(FlaskForm):
     cedula = StringField('Cedula', validators=[DataRequired(), Length(min=8, max=20)])
     password = PasswordField('Contraseña', validators=[DataRequired()])
@@ -31,27 +32,29 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Crear Cuenta')
 
 class NewTicketForm(FlaskForm):
-
     title = StringField('Asunto', validators=[DataRequired(), Length(min=4, max=200)])
     product = SelectField('Seleccionar Producto', validators=[DataRequired()])
     description = TextAreaField('Descripcion', validators=[DataRequired(), Length(max=500)])
     submit = SubmitField('Crear Ticket')
-    
+
+# CLASES DE LOS FORMULARIOS ---FINAL---
+
 class Base(DeclarativeBase):
   pass
 
-
-
+# INICIALIZAMOS FLASK, CONFIGURAMOS ACCESO A LA BASE DE DATOS Y EL USO DEL ORM (SQLAlchemy)
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://usuario:password@localhost:3306/mydb"
 db = SQLAlchemy(model_class=Base)
 bcrypt = Bcrypt(app)
 
+# INICIALIZAMOS EL GESTOR DE SESIONES
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# CONFIGURAMOS LA CARGA DE SESION DE USUARIO (empleado o cliente)
 @login_manager.user_loader
 def load_user(user_id):
     user = User.query.filter_by(cedula=user_id).first()
@@ -60,10 +63,12 @@ def load_user(user_id):
     else:
         return Empleado.query.filter_by(cedula=user_id).first()
 
+# INICIAMOS EL ORM Y CARGAMOS LAS DEFINICIONES DE TABLAS
 db.init_app(app)
 with app.app_context():
     db.reflect()
 
+# TABLAS DE LA BASE DE DATOS/MODELOS ---INICIO---
 class User(db.Model, UserMixin):
     __table__ = db.metadata.tables["cliente"]
 
@@ -97,8 +102,10 @@ class Garantia(db.Model):
 class Factura(db.Model):
     __table__ = db.metadata.tables["factura"]
 
+# TABLAS DE LA BASE DE DATOS/MODELOS ---FINAL---
 
 
+# RUTAS DE LA APLICACION Y LOGICA DEL NEGOCIO ---INICIO---
 @app.route("/")
 def main():
     return render_template('main.html')
@@ -108,11 +115,22 @@ def login():
     if current_user.is_authenticated:
         redirect(url_for('dashboard'))
 
+    # usamos el formulario de login
     form = LoginForm()
+
+    #validamos cuando lo envien
     if form.validate_on_submit():
+
+        #hacemos un query a la base de datos (SELECT WHERE...)
         user = User.query.filter_by(cedula=form.cedula.data).first()
+
+        #validamos si el usuario es un cliente o un empleado
         if user != None:
+
+            #comparamos el hash de la contrasena
             if bcrypt.check_password_hash(user.contrasena, form.password.data):
+
+                #logueamos al usuario y redirijimos al dashboard
                 login_user(user)
                 return redirect(url_for('dashboard'))
         else:
@@ -198,7 +216,6 @@ def newTicket():
     form.product.choices = tuplas
 
     if form.validate_on_submit():
-        print('no me ejecuto')
         new_ticket = Ticket(
             id_producto=form.product.data,
             id_cliente=current_user.id_cliente, 
@@ -214,3 +231,5 @@ def newTicket():
         return redirect(url_for('dashboard'))
         
     return render_template('new_ticket.html', form=form)
+
+# RUTAS DE LA APLICACION Y LOGICA DEL NEGOCIO ---FINAL---
