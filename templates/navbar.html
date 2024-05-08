@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2 p-3 vh-100">
+            <h4>RegiUp</h4>
+            <hr class="mt-4">
+            <ul class="nav flex-column h-100">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('dashboard')}}">Todos los tickets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('newTicket')}}">Crear nuevo ticket</a>
+                </li>
+                <li class="nav-item text-center h-50">
+                    <a class="btn btn-danger px-5" href="{{url_for('logout')}}">Salir</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-10">
+            <div class="row bg-dark p-4 justify-conter-end">
+                <div>user</div>
+            </div>
+            {% block appcontent %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

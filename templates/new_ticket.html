@@ -1,0 +1,29 @@
+{% extends "navbar.html" %}
+{% block appcontent %}
+<div class="row">
+  <div class="row p-3">
+    <h2>Agregar Nuevo Ticket</h2>
+  </div>
+  <div class="row px-5">
+    <form method="POST" action="{{url_for('newTicket')}}">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.title.label(class="form-label") }}
+        {{ form.title(class="form-control", placeholder='Ingresa el asunto') }}
+      </div>
+      <div class="mb-3">
+        {{ form.product.label(class="form-label") }}
+        {{ form.product(class="form-control", placeholder='Elige un producto') }}
+      </div>
+      <div class="mb-3">
+        {{ form.description.label(class="form-label") }}
+        {{ form.description(class="form-control", placeholder='Ingresa tu problema') }}
+      </div>
+      {{ form.submit(class="btn btn-primary") }}
+    </form>
+    {% if form.errors %}
+      {{ form.errors }}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

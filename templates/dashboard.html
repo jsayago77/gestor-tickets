@@ -1,0 +1,42 @@
+{% extends "navbar.html" %}
+{% block appcontent %}
+<div class="row">
+    <div class="row p-3">
+        <h2>Todos los Tickets</h2>
+        {% if current_user.is_authenticated %}
+            Hi {{ current_user.nombre }}!
+        {% endif %}
+    </div>
+    <div class="row px-5 justify-content-center">
+        <div class="col-9">
+            {% if current_user.is_authenticated %}
+                {% if (tickets != []) %}
+                    {% for ticket in tickets %}
+                    <div class="card p-0 my-3">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ ticket.asunto }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% if current_user.__class__ == User %}
+                                <div class="col">{{ current_user.nombre }}</div>
+                                {% else %}
+                                <div class="col">{{ ticket.cliente }}</div>
+                                {% endif %}
+                                <div class="col">{{ ticket.descripcion }}</div>
+                                <div class="col">{{ ticket.status }}</div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-body-secondary">
+                            FECHA CREACION: {{ ticket.fecha_creacion }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="text-center">No tiene tickets.</div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

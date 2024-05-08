@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center mt-5">
+        <div class="col-6">
+            <h1 class="display-4">Iniciar sesión</h1>
+            <form method="POST" action="{{url_for('login')}}">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.cedula.label(class="form-label") }}
+                    {{ form.cedula(class="form-control", placeholder='Ingresa tu cedula') }}
+                </div>
+                <div class="mb-3">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control", placeholder='Ingresa tu contraseña') }}
+                </div>
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{url_for('main')}}" class="btn btn-secondary">Regresar</a>
+            </form>
+            {% if form.errors %}
+                {{ form.errors }}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

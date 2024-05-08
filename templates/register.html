@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center mt-5">
+        <div class="col-6">
+            <h1 class="display-4">Crear una cuenta</h1>
+            <form method="POST" action="{{url_for('register')}}">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.cedula.label(class="form-label") }}
+                    {{ form.cedula(class="form-control", placeholder='Ingresa tu cedula') }}
+                </div>
+                <div class="mb-3">
+                    {{ form.factura.label(class="form-label") }}
+                    {{ form.factura(class="form-control", placeholder='Ingresa el numero de tu factura') }}
+                </div>
+                <div class="mb-3">
+                    {{ form.fullname.label(class="form-label") }}
+                    {{ form.fullname(class="form-control", placeholder='Ingresa tu nombre completo') }}
+                </div>
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control", placeholder='Ingresa tu correo electrónico') }}
+                </div>
+                <div class="mb-3">
+                    {{ form.telefono.label(class="form-label") }}
+                    {{ form.telefono(class="form-control", placeholder='Ingresa tu telefono') }}
+                </div>
+                <div class="mb-3">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control", placeholder='Ingresa una contraseña segura') }}
+                </div>
+                <div class="mb-3">
+                    {{ form.password2.label(class="form-label") }}
+                    {{ form.password2(class="form-control", placeholder='Confirma tu contraseña') }}
+                </div>
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{url_for('main')}}" class="btn btn-secondary">Regresar</a>
+            </form>
+            {% if form.errors %}
+            {{ form.errors }}
+            {% endif %}
+            <div>
+                {% if message != '' %}
+                {{ message }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
