@@ -13,25 +13,25 @@ Jose Sayago, Dorieliz Guerrero, Alyeluz Perez
 Crear entorno virtual:
 
 ~~~shell
-py -m venv .env 
+python -m venv .env 
 ~~~
 
 Activar entorno virtual Linux:
 
 ~~~shell
-source env/bin/activate 
+source .env/bin/activate 
 ~~~
 
 Activar entorno virtual Windows:
 
 ~~~shell
-env\Scripts\activate
+.env\Scripts\activate
 ~~~
 
 Ejecutar con pip:
 
 ~~~shell
-pip install flask flask_bcrypt email_validator flask-wtf sqlalchemy flask_login mysql-connector-python
+pip install email_validator mysql-connector-python sqlalchemy flask flask_bcrypt flask-wtf flask_sqlalchemy flask_login
 ~~~
 
 Luego configurar la linea de conexion a la base de datos con el usuario, password, servidor, puerto, nombre de base de datos
@@ -43,7 +43,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://<usuario>:<passw
 Ejemplo:
 
 ~~~python
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://usuario:password@localhost:3306/mydb"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://testuser:123456@localhost:3306/mydb"
 ~~~
 
 ## Ejecucion
