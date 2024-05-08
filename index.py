@@ -37,6 +37,12 @@ class NewTicketForm(FlaskForm):
     description = TextAreaField('Descripcion', validators=[DataRequired(), Length(max=500)])
     submit = SubmitField('Crear Ticket')
 
+class AssignEmpleado(FlaskForm):
+    ticket = SelectField('Seleccionar Ticket', validators=[DataRequired()])
+    empleado = SelectField('Seleccionar Empleado', validators=[DataRequired()])
+    comentario = TextAreaField('Comentarios', validators=[DataRequired(), Length(max=500)])
+    submit = SubmitField('Asignar')
+
 # CLASES DE LOS FORMULARIOS ---FINAL---
 
 class Base(DeclarativeBase):
@@ -181,18 +187,28 @@ def logout():
 @login_required
 def dashboard():
     tickets = []
+    isManager = False
     if current_user.__class__ == User:
         tickets = Ticket.query.filter_by(id_cliente=current_user.id_cliente)
+    elif current_user.rol == 'Gerente':
+        isManager = True
+        tickets = Ticket.query.all()
+        for ticket in tickets:
+            id_responsable = ResponsableTicket.query.filter_by(id_ticket=ticket.id).first()
+            if id_responsable:
+                responsable = Empleado.query.filter_by(id_empleado=id_responsable.id_empleado).first()
+                ticket.responsable = responsable.nombre if responsable else ''
     else:
         resp_tickets = ResponsableTicket.query.filter_by(id_empleado=current_user.id_empleado)
         
         for resp in resp_tickets:
-            tickets = Ticket.query.filter_by(id=resp.id_ticket)
+            tickets = Ticket.query.filter_by(id=resp.id_ticket).all()
 
-        for ticket in tickets:
-            ticket.cliente = User.query.filter_by(id_cliente=ticket.id_cliente).nombre
+    for ticket in tickets:
+            cliente = User.query.filter_by(id_cliente=ticket.id_cliente).first()
+            ticket.cliente = cliente.nombre
 
-    return render_template('dashboard.html', tickets=tickets)
+    return render_template('dashboard.html', tickets=tickets, isManager=isManager)
 
 
 
@@ -231,5 +247,39 @@ def newTicket():
         return redirect(url_for('dashboard'))
         
     return render_template('new_ticket.html', form=form)
+
+@app.route("/assign-ticket", methods=['GET', 'POST'])
+@login_required
+def assignTicket():
+    form = AssignEmpleado()
+
+    Tickettuplas = []
+    tickets = Ticket.query.all()
+    for ticket in tickets:
+        Tickettuplas.append((getattr(ticket, 'id'), getattr(ticket, 'asunto')))
+
+    form.ticket.choices = Tickettuplas
+
+    Emptuplas = []
+    empleados = Empleado.query.all()
+    for empleado in empleados:
+        Emptuplas.append((getattr(empleado, 'id_empleado'), getattr(empleado, 'nombre')))
+
+    form.empleado.choices = Emptuplas
+
+    if form.validate_on_submit():
+        resp_ticket = ResponsableTicket(
+            id_ticket=form.ticket.data,
+            id_empleado=form.empleado.data,
+            comentario=form.comentario.data,
+            status='ABIERTO',
+            fecha_asignacion=datetime.datetime.now()
+        )
+
+        db.session.add(resp_ticket)
+        db.session.commit()
+        return redirect(url_for('dashboard'))
+
+    return render_template('assign_ticket.html', form=form)
 
 # RUTAS DE LA APLICACION Y LOGICA DEL NEGOCIO ---FINAL---

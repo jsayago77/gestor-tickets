@@ -18,9 +18,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                {% if current_user.__class__ == User %}
-                                <div class="col">{{ current_user.nombre }}</div>
-                                {% else %}
+                                {% if current_user.__class__ != User %}
                                 <div class="col">{{ ticket.cliente }}</div>
                                 {% endif %}
                                 <div class="col">{{ ticket.descripcion }}</div>
@@ -28,7 +26,14 @@
                             </div>
                         </div>
                         <div class="card-footer text-body-secondary">
-                            FECHA CREACION: {{ ticket.fecha_creacion }}
+                            <div class="row">
+                                <div class="col">
+                                    RESPONSABLE: {{ ticket.responsable }}
+                                </div>
+                                <div class="col">
+                                    FECHA CREACION: {{ ticket.fecha_creacion }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}

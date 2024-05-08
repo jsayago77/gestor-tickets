@@ -1,0 +1,29 @@
+{% extends "navbar.html" %}
+{% block appcontent %}
+<div class="row">
+  <div class="row p-3">
+    <h2>Asignar Ticket</h2>
+  </div>
+  <div class="row px-5">
+    <form method="POST" action="{{url_for('assignTicket')}}">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.ticket.label(class="form-label") }}
+        {{ form.ticket(class="form-control", placeholder='Selecciona un ticket') }}
+      </div>
+      <div class="mb-3">
+        {{ form.empleado.label(class="form-label") }}
+        {{ form.empleado(class="form-control", placeholder='Selecciona un empleado') }}
+      </div>
+      <div class="mb-3">
+        {{ form.comentario.label(class="form-label") }}
+        {{ form.comentario(class="form-control", placeholder='Escribe comentarios') }}
+      </div>
+      {{ form.submit(class="btn btn-primary") }}
+    </form>
+    {% if form.errors %}
+      {{ form.errors }}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

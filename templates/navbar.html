@@ -12,6 +12,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('newTicket')}}">Crear nuevo ticket</a>
                 </li>
+
+                {% if isManager %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('assignTicket')}}">Asignar Empleado</a>
+                </li>
+                {% endif %}
                 <li class="nav-item text-center h-50">
                     <a class="btn btn-danger px-5" href="{{url_for('logout')}}">Salir</a>
                 </li>
