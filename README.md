@@ -19,13 +19,13 @@ py -m venv .env
 Activar entorno virtual Linux:
 
 ~~~shell
-source venv/bin/activate 
+source env/bin/activate 
 ~~~
 
 Activar entorno virtual Windows:
 
 ~~~shell
-venv\Scripts\activate
+env\Scripts\activate
 ~~~
 
 Ejecutar con pip:
